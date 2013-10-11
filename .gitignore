@@ -1,0 +1,6 @@
+shelf/*
+local/bin/*
+local/include/*
+local/lib/*
+__pycache__/
+*.pyc
