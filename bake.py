@@ -12,6 +12,9 @@ import sys
 from baker.recipes import Recipe
 
 
+BAKER_ROOT = os.path.dirname(__file__)
+
+
 def _get_recipe_instance(name):
     """Get recipe class for :name and instantiate"""
     recipe_name = name.lower()
@@ -23,16 +26,10 @@ def _get_recipe_instance(name):
                 and issubclass(getattr(module, n), Recipe)
                 and getattr(module, n) is not Recipe]
     assert len(names) == 1
-    recipe = getattr(module, names[0])()
-    recipe.prefix = os.path.join(
-        os.path.dirname(__file__),
-        'shelf',
-        names[0].lower()
+    prefix = os.path.join(BAKER_ROOT, 'oven', names[0].lower())
+    return getattr(module, names[0])(
+        recipe_name, prefix, os.path.join(BAKER_ROOT, 'shelf')
     )
-    recipe.compiler = 'mingw'       # TODO: Support MSVC
-    recipe.make = 'mingw32-make'
-    recipe.name = recipe_name
-    return recipe
 
 
 def install(argv):
@@ -44,6 +41,7 @@ def install(argv):
     recipe = _get_recipe_instance(argv.pop(0))
     os.chdir(recipe.get_source())
     recipe.install()
+    recipe.link()
 
 
 def main(argv):
@@ -58,6 +56,8 @@ def main(argv):
 
     if subcommand == 'install':
         install(argv)
+    else:
+        raise SyntaxError('No matching command: %s' % subcommand)
 
 
 if __name__ == '__main__':
