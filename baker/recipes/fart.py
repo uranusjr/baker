@@ -5,6 +5,7 @@ from . import Recipe
 
 class Fart(Recipe):
     url = 'http://downloads.sourceforge.net/project/fart-it/fart-it/1.99b/fart199b_source.zip'
+    version = '1.99b'
 
     def install(self):
         self.system('gcc', 'fart.cpp', 'fart_shared.c', 'wildmat.c')

@@ -7,7 +7,7 @@ setlocal
 set PYTHON=C:\Python33\python.exe
 
 :: Syntax: bake <sub-command> <arguments ...>
-%PYTHON% %~dp0\bake.py %*
+utils\elevate -c -w %PYTHON% %~dp0\bake.py %*
 
 endlocal
 exit /b

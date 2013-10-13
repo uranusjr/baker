@@ -33,7 +33,7 @@ def _get_recipe_instance(name):
 
 
 def install(argv):
-    """Runs the installing subcommand
+    """Install subcommand
 
     :param argv: A list of arguments the user supplied after *install*. For
         example, ``bake install me`` yields ``argv == ['me']``.
@@ -42,6 +42,26 @@ def install(argv):
     os.chdir(recipe.get_source())
     recipe.install()
     recipe.link()
+
+
+def uninstall(argv):
+    """Uninstall subcommand
+
+    :param argv: A list of arguments the user supplied after *uninstall*. For
+        example, ``bake uninstall me`` yields ``argv == ['me']``.
+    """
+    recipe = _get_recipe_instance(argv.pop(0))
+    recipe.uninstall()
+
+
+def link(argv):
+    recipe = _get_recipe_instance(argv.pop(0))
+    recipe.link()
+
+
+def unlink(argv):
+    recipe = _get_recipe_instance(argv.pop(0))
+    recipe.unlink()
 
 
 def main(argv):
@@ -56,9 +76,20 @@ def main(argv):
 
     if subcommand == 'install':
         install(argv)
+    elif subcommand == 'uninstall':
+        uninstall(argv)
+    elif subcommand == 'link':
+        link(argv)
+    elif subcommand == 'unlink':
+        unlink(argv)
     else:
         raise SyntaxError('No matching command: %s' % subcommand)
 
 
 if __name__ == '__main__':
-    main(sys.argv.copy())
+    try:
+        main(sys.argv.copy())
+    except Exception as e:
+        print(e)
+    finally:
+        input('Press Enter to end...')
